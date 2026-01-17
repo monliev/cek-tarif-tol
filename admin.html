@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Data Tarif Tol</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: white;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <h1>Import Data dari PDF</h1>
+        <div class="instructions">
+            <h3>Cara Menggunakan:</h3>
+            <ol>
+                <li>Buka file PDF Tarif Tol Anda.</li>
+                <li>Tekan <strong>Ctrl + A</strong> (Select All) lalu <strong>Ctrl + C</strong> (Copy).</li>
+                <li>Paste (Ctrl + V) teks tersebut ke dalam kotak di bawah ini.</li>
+                <li>Klik tombol <strong>"Konversi ke JSON"</strong>.</li>
+                <li>Salin hasil kode di bawah dan masukkan ke file <code>data/tariffs.js</code>.</li>
+            </ol>
+        </div>
+
+        <textarea id="raw-text" placeholder="Paste teks dari PDF di sini..."></textarea>
+        <button onclick="parseText()">Konversi ke JSON</button>
+
+        <h3>Hasil JSON:</h3>
+        <pre id="output-json">// Hasil akan muncul di sini...</pre>
+    </div>
+
+    <script>
+        function parseText() {
+            const text = document.getElementById('raw-text').value;
+            const lines = text.split('\n');
+            const data = {};
+            let currentRuas = "Unknown Ruas";
+
+            // Simple heuristic parsing (Needs adjustment based on actual PDF copy-paste format)
+            // Pattern assumption: "Gerbang Asal Gerbang Tujuan Gol I Gol II ..."
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+
+                // Try to detect Ruas Header (usually uppercase or specific keywords)
+                if (line.includes("Ruas") || line === line.toUpperCase()) {
+                    // Logic to set currentRuas
+                    // This is tricky without seeing the raw text structure.
+                    // For now, we put everything in one bucket or try to guess.
+                }
+
+                // Regex to find prices
+                // Example line: "Cikopo Kalijati 27.500 45.500 ..."
+                // Matches numbers with dots: \d{1,3}(?:\.\d{3})*
+                const priceMatch = line.match(/(\d{1,3}(?:\.\d{3})*)/g);
+
+                if (priceMatch && priceMatch.length >= 5) {
+                    // Assume it's a tariff line
+                    // The text BEFORE the prices is the Gate names
+                    const textPart = line.split(priceMatch[0])[0].trim();
+                    const gates = textPart.split(/\s+-\s+|\s+/); // Split by space or dash
+
+                    let asal = gates[0] || "Asal";
+                    let tujuan = gates.length > 1 ? gates[gates.length - 1] : "Tujuan";
+
+                    // Clean up prices (remove dots, convert to int)
+                    const prices = priceMatch.map(p => parseInt(p.replace(/\./g, '')));
+
+                    if (!data["Hasil Import"]) data["Hasil Import"] = [];
+
+                    data["Hasil Import"].push({
+                        asal: asal,
+                        tujuan: tujuan,
+                        rates: {
+                            "Gol I": prices[0],
+                            "Gol II": prices[1],
+                            "Gol III": prices[2],
+                            "Gol IV": prices[3],
+                            "Gol V": prices[4]
+                        }
+                    });
+                }
+            });
+
+            const jsonOutput = "const tollData = " + JSON.stringify(data, null, 4) + ";";
+            document.getElementById('output-json').textContent = jsonOutput;
+        }
+    </script>
+</body>
+
+</html>
