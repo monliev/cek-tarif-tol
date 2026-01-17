@@ -19,8 +19,8 @@ set /p REMOTE_URL="Paste kode git remote add origin di sini: "
 %REMOTE_URL%
 
 echo.
-echo Mengupload ke GitHub...
-git push -u origin main
+echo Mengupload ke GitHub (Menimpa file lama)...
+git push -f -u origin main
 
 echo.
 echo ===================================================
