@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "io.github.monliev.twa",
+            "sha256_cert_fingerprints": [
+                "71:95:C5:8D:F4:4E:89:C3:36:FE:B7:60:F1:E8:8A:58:95:B7:95:17:BD:E6:B7:9F:74:3D:CD:24:A5:71:08:27"
+            ]
+        }
+    }
+]

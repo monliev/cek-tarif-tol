@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Tarif Tol - Rute Lengkap</title>
+    <meta name="description" content="Cek total tarif tol Trans Jawa antar gerbang manapun.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+    <link rel="icon" type="image/png" href="assets/icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-area">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M18.5 19C18.5 19.8284 17.8284 20.5 17 20.5C16.1716 20.5 15.5 19.8284 15.5 19M18.5 19V14C18.5 11.5312 16.9205 9.44026 14.7176 8.70774M18.5 19C18.5 18.1716 19.1716 17.5 20 17.5C20.8284 17.5 21.5 18.1716 21.5 19M5.5 19C5.5 19.8284 6.17157 20.5 7 20.5C7.82843 20.5 8.5 19.8284 8.5 19M5.5 19V9.5C5.5 7.03125 7.07946 4.94026 9.2824 4.20774M5.5 19C5.5 18.1716 4.82843 17.5 4 17.5C3.17157 17.5 2.5 18.1716 2.5 19M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <h1>TarifTol<span class="dot">.</span>id</h1>
+            </div>
+            <p class="subtitle">Cek tarif total perjalanan antar gerbang tol.</p>
+        </header>
+
+        <!-- 
+            [SLOT IKLAN 1 - Header/Top] 
+            Tempel kode Google AdSense/AdMob for Web Anda di sini.
+            Disarankan ukuran responsif atau banner 320x50.
+        -->
+        <!-- <div class="ad-container" style="text-align: center; margin: 10px 0;"> ...Kode Iklan... </div> -->
+
+        <main class="card glass-effect">
+            <!-- Removed 'Pilih Ruas' step. Direct Origin-Dest Search. -->
+
+            <div class="input-group">
+                <label for="gerbang-asal-trigger">Lokasi Berangkat (Gerbang Asal)</label>
+                <div class="custom-select-trigger" id="gerbang-asal-trigger" onclick="openSearchModal('origin')">
+                    <span id="label-asal">Pilih Gerbang Asal...</span>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="gerbang-tujuan-trigger">Lokasi Tujuan (Gerbang Keluar)</label>
+                <div class="custom-select-trigger" id="gerbang-tujuan-trigger" onclick="openSearchModal('destination')">
+                    <span id="label-tujuan">Pilih Gerbang Tujuan...</span>
+                    <span class="chevron">▼</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div id="result-area" class="result-area hidden">
+                <h3>Total Tarif Perjalanan</h3>
+                <div class="price-cards">
+                    <div class="price-card primary">
+                        <div class="golongan-badge">Golongan I</div>
+                        <div class="vehicle-icon">🚗</div>
+                        <div class="price">Rp <span id="price-gol-1">-</span></div>
+                        <div class="desc">Sedan, Jip, Pick Up, Minibus</div>
+                    </div>
+
+                    <div class="other-classes-grid">
+                        <div class="mini-card">
+                            <span>Gol II</span>
+                            <strong id="price-gol-2">-</strong>
+                        </div>
+                        <div class="mini-card">
+                            <span>Gol III</span>
+                            <strong id="price-gol-3">-</strong>
+                        </div>
+                        <div class="mini-card">
+                            <span>Gol IV</span>
+                            <strong id="price-gol-4">-</strong>
+                        </div>
+                        <div class="mini-card">
+                            <span>Gol V</span>
+                            <strong id="price-gol-5">-</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="triggerShare()" class="share-btn">
+                    <span class="icon">📸</span> Bagikan Tarif (Screenshot)
+                </button>
+            </div>
+            <div id="empty-state" class="empty-state">
+                <p>Pilih gerbang asal dan tujuan untuk melihat akumulasi tarif.</p>
+            </div>
+        </main>
+
+        <!-- 
+            [SLOT IKLAN 2 - Bottom/Footer] 
+            Tempel kode Google AdSense/AdMob for Web Anda di sini.
+        -->
+        <!-- <div class="ad-container" style="text-align: center; margin: 20px 0;"> ...Kode Iklan... </div> -->
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p class="disclaimer">
+                    Data dari <a href="https://bpjt.pu.go.id/info-tarif-dan-golongan/"
+                        target="_blank">bpjt.pu.go.id</a>.<br>
+                    Aplikasi independen, bukan resmi BPJT/Operator.
+                </p>
+                <div class="legal-links">
+                    <a href="mailto:monliev@icloud.com">Kontak</a> &bull;
+                    <a href="privacy.html">Kebijakan Privasi</a> &bull;
+                    <a href="https://github.com/monliev/tarif-tol-id" target="_blank">Source Code</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Fullscreen Search Modal -->
+    <div id="search-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Pilih Gerbang</h3>
+                <button class="close-btn" onclick="closeSearchModal()">✕</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="gate-search-input" placeholder="Cari nama gerbang..." onkeyup="filterGates()">
+            </div>
+            <div id="gate-list" class="gate-list">
+                <!-- Gate items generated by JS -->
+            </div>
+        </div>
+    </div>
+    <!-- Custom Alert Modal -->
+    <div id="alert-modal" class="modal hidden" style="z-index: 10000;">
+        <div class="modal-content alert-content">
+            <div class="modal-header">
+                <h3 id="alert-title">Info</h3>
+                <button class="close-btn" onclick="closeAlert()">✕</button>
+            </div>
+            <div id="alert-message" class="alert-body">
+                <!-- Message goes here -->
+            </div>
+            <button class="primary-btn" onclick="closeAlert()">OK</button>
+        </div>
+    </div>
+
+
+    <script src="data/tariff_data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registered!', reg))
+                    .catch(err => console.log('SW registration failed', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
